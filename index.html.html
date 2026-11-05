@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Campus Gallery</title>
+<style>
+:root{--bg:#f4f0ff;--card:#fff;--tx:#1d1a2b;--mu:#6e6a85;--ac:#7c3aed;--bd:#e6defa;--er:#ec2f78;--me:#7c3aed;--g:linear-gradient(135deg,#7c3aed,#ec4899 60%,#f59e0b);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#130f20;--card:#1e1933;--tx:#f0ecfb;--mu:#a49fc0;--ac:#a78bfa;--bd:#352b57;--er:#ff6b9a;--me:#6d4fd8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#130f20;--card:#1e1933;--tx:#f0ecfb;--mu:#a49fc0;--ac:#a78bfa;--bd:#352b57;--er:#ff6b9a;--me:#6d4fd8;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg) linear-gradient(180deg,rgba(124,58,237,.14),transparent 280px) no-repeat;color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;background:var(--g);box-shadow:0 2px 12px rgba(124,58,237,.3)}
+h1{font-size:18px;margin:0;color:#fff}
+nav{display:flex;gap:6px}
+main{max-width:620px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 12px rgba(124,58,237,.10)}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+input[type=text],input[type=password],select{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+button{font:inherit;cursor:pointer;border:0;border-radius:8px;padding:8px 14px;background:var(--g);color:#fff}
+button.g{background:transparent;color:var(--tx);border:1px solid var(--bd)}
+button.l{background:none;color:var(--mu);padding:4px 8px}
+button.l.on{color:var(--er)}
+button.on2{background:var(--ac);color:#fff}
+.nav button{background:none;color:rgba(255,255,255,.85);padding:6px 10px}.nav button.on{color:#fff;font-weight:600;background:rgba(255,255,255,.25)}
+.full{width:100%;margin-top:16px}
+.err{color:var(--er);font-size:14px;min-height:18px;margin-top:8px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:8px}
+.chips button{white-space:nowrap;background:var(--card);color:var(--tx);border:1px solid var(--bd);padding:6px 12px;font-size:14px}
+.chips button.on{background:var(--g);color:#fff;border-color:transparent}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.av{width:38px;height:38px;border-radius:50%;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;flex:none}
+.av.big{width:72px;height:72px;font-size:28px}
+.nm{font-weight:600;cursor:pointer;background:none;color:var(--tx);padding:0}
+.sub{font-size:12px;color:var(--mu)}
+.post{padding:0;overflow:hidden}
+.post .ph{padding:12px 14px 0}
+.post img{width:100%;max-height:520px;object-fit:cover;display:block}
+.acts{display:flex;align-items:center;padding:4px 6px}
+.body{padding:0 14px 12px;font-size:15px}
+.cm{padding:0 14px 8px;font-size:14px}.cm b{cursor:pointer}
+.cmf{display:flex;gap:8px;padding:0 14px 14px}
+.empty{color:var(--mu);text-align:center;padding:36px 0}.bd2{color:#fff;padding:1px 8px;border-radius:10px;font-size:11px}
+.stats{display:flex;gap:18px;margin:8px 0}
+.chat{display:grid;grid-template-columns:220px 1fr;gap:12px;height:68vh}
+.chat>div{background:var(--card);border:1px solid var(--bd);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.ul{overflow-y:auto;flex:1}
+.ur{display:flex;gap:10px;align-items:center;padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--bd)}
+.ur.on{background:var(--bg)}
+.ur div{min-width:0}.ur .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
+.m{max-width:75%;padding:8px 12px;border-radius:14px;background:var(--bg);align-self:flex-start;word-wrap:break-word}
+.m.me{background:var(--me);color:#fff;align-self:flex-end}
+.cin{display:flex;gap:8px;padding:10px;border-top:1px solid var(--bd)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;z-index:9}
+@media(max-width:640px){.chat{grid-template-columns:1fr}.chat.open>div:first-child{display:none}.chat:not(.open)>div:last-child{display:none}}
+</style>
+</head>
+<body>
+<header><h1>📸 Campus Gallery</h1><nav class="nav" id="nav"></nav></header>
+<main id="root"></main>
+<script>
+const DEPTS=["UIET","Law","Hotel Management","Pharmacy","Fine Arts"];
+const DC={UIET:"#2563eb",Law:"#b45309","Hotel Management":"#db2777",Pharmacy:"#059669","Fine Arts":"#7c3aed"};
+let me=null,V={v:"home",dept:"All",mode:"all",en:null,chat:null,q:"",open:{},authMode:"login"};
+const L=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
+const S=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
+const U=()=>L("cg_users",{}),P=()=>L("cg_posts",[]),C=()=>L("cg_chats",{});
+function h(t,a={},...c){const e=document.createElement(t);for(const k in a){if(k==="class")e.className=a[k];else if(k.startsWith("on"))e[k]=a[k];else e.setAttribute(k,a[k])}c.flat().forEach(x=>{if(x!=null&&x!==false)e.append(x)});return e}
+async function hash(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("cg:"+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function toast(t){const e=h("div",{class:"toast"},t);document.body.append(e);setTimeout(()=>e.remove(),2200)}
+const av=(n,big)=>h("div",{class:"av"+(big?" big":"")},(n||"?")[0].toUpperCase());
+const go=(v,x={})=>{V={...V,v,...x};render()};
+const ck=(a,b)=>[a,b].sort().join("|");
+
+function auth(){
+  const r=V.authMode==="register",err=h("div",{class:"err"});
+  const nm=h("input",{type:"text",id:"nm",autocomplete:"name"}),en=h("input",{type:"text",id:"en",autocomplete:"username"}),pw=h("input",{type:"password",id:"pw"});
+  const btn=h("button",{class:"full",onclick:async()=>{
+    const e=en.value.trim().toUpperCase(),p=pw.value,us=U();
+    if(!e||p.length<6){err.textContent="Enter your enrollment number and a password of 6+ characters.";return}
+    const hh=await hash(p);
+    if(r){if(!nm.value.trim()){err.textContent="Please enter your name.";return}
+      if(us[e]){err.textContent="This enrollment number is already registered.";return}
+      us[e]={name:nm.value.trim(),h:hh,following:[]};S("cg_users",us)}
+    else if(!us[e]||us[e].h!==hh){err.textContent="Wrong enrollment number or password.";return}
+    me={en:e};try{sessionStorage.setItem("cg_me",e)}catch(x){}
+    V.v="home";render()}},r?"Register":"Log in");
+  return h("div",{class:"card",style:"max-width:380px;margin:30px auto"},
+    h("h2",{style:"margin-top:0"},r?"Create account":"Student login"),
+    r&&h("label",{for:"nm"},"Full name"),r&&nm,
+    h("label",{for:"en"},"Enrollment number"),en,h("label",{for:"pw"},"Password"),pw,err,btn,
+    h("p",{style:"text-align:center;font-size:14px"},r?"Already registered? ":"First time here? ",
+      h("button",{class:"l",style:"color:var(--ac)",onclick:()=>{V.authMode=r?"login":"register";render()}},r?"Log in":"Create account")));
+}
+
+function follow(en){const us=U(),m=us[me.en];m.following=m.following||[];
+  m.following=m.following.includes(en)?m.following.filter(x=>x!==en):[...m.following,en];S("cg_users",us);render()}
+const upd=(id,fn)=>{const ps=P();const p=ps.find(x=>x.id===id);if(p){fn(p);S("cg_posts",ps)}render()};
+
+function share(p){
+  const t=p.name+"’s photo from "+p.dept+(p.cap?": “"+p.cap+"”":"")+" — Campus Gallery";
+  if(navigator.share){navigator.share({title:"Campus Gallery",text:t}).catch(()=>{})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>toast("Copied to clipboard"),()=>toast("Couldn’t copy"))}
+  else toast("Sharing isn’t supported here");
+}
+
+function card(p){
+  const us=U(),isMe=p.en===me.en,fl=(us[me.en].following||[]).includes(p.en),liked=p.likes.includes(me.en),open=V.open[p.id];
+  const inp=h("input",{type:"text",placeholder:"Add a comment…",maxlength:"200"});
+  const send=()=>{const t=inp.value.trim();if(t){V.open[p.id]=1;upd(p.id,x=>x.comments.push({en:me.en,name:us[me.en].name,text:t,t:Date.now()}))}};
+  inp.onkeydown=e=>{if(e.key==="Enter")send()};
+  return h("div",{class:"card post"},
+    h("div",{class:"ph"},av(p.name),h("div",{style:"flex:1"},h("button",{class:"nm",onclick:()=>go("profile",{en:p.en})},p.name),h("div",{class:"sub"},h("span",{class:"bd2",style:"background:"+(DC[p.dept]||"#7c3aed")},p.dept)," · "+new Date(p.t).toLocaleDateString())),
+      !isMe&&h("button",{class:fl?"g":"",onclick:()=>follow(p.en)},fl?"Following":"Follow"),
+      isMe&&h("button",{class:"l",onclick:()=>{S("cg_posts",P().filter(x=>x.id!==p.id));render()}},"Delete")),
+    h("img",{src:p.img,alt:p.cap||p.dept}),
+    h("div",{class:"acts"},
+      h("button",{class:"l"+(liked?" on":""),onclick:()=>upd(p.id,x=>{x.likes=liked?x.likes.filter(e=>e!==me.en):[...x.likes,me.en]})},(liked?"♥ ":"♡ ")+p.likes.length),
+      h("button",{class:"l",onclick:()=>{V.open[p.id]=!open;render()}},"💬 "+p.comments.length),
+      h("button",{class:"l",onclick:()=>share(p)},"↗ Share")),
+    p.cap&&h("div",{class:"body"},h("b",{},p.name+" "),p.cap),
+    open&&h("div",{class:"cm"},p.comments.map(c=>h("div",{},h("b",{onclick:()=>go("profile",{en:c.en})},c.name+" "),c.text))),
+    open&&h("div",{class:"cmf"},inp,h("button",{onclick:send},"Post")));
+}
+
+function home(){
+  const file=h("input",{type:"file",accept:"image/*"}),cap=h("input",{type:"text",maxlength:"120",placeholder:"Write a caption…"}),sel=h("select",{},DEPTS.map(d=>h("option",{},d))),err=h("div",{class:"err"});
+  if(DEPTS.includes(V.dept))sel.value=V.dept;
+  const post=async()=>{
+    const f=file.files[0];if(!f||!f.type.startsWith("image/")){err.textContent="Choose an image to post.";return}
+    try{const img=await shrink(f),ps=P();ps.push({id:Date.now()+"-"+Math.random().toString(36).slice(2),dept:sel.value,en:me.en,name:U()[me.en].name,cap:cap.value.trim(),img,t:Date.now(),likes:[],comments:[]});
+      if(!S("cg_posts",ps)){err.textContent="Browser storage is full. Delete some posts first.";return}render()}
+    catch(e){err.textContent="Couldn’t read that image."}};
+  const fl=U()[me.en].following||[];
+  let ps=P().filter(p=>(V.dept==="All"||p.dept===V.dept)&&(V.mode==="all"||fl.includes(p.en)||p.en===me.en)).sort((a,b)=>b.t-a.t);
+  return h("div",{},
+    h("div",{class:"card"},h("b",{},"Share a campus photo"),h("label",{},"Department"),sel,h("label",{},"Photo"),file,h("label",{},"Caption"),cap,err,h("button",{class:"full",onclick:post},"Post")),
+    h("div",{class:"chips"},["All",...DEPTS].map(d=>h("button",{class:V.dept===d?"on":"",style:V.dept===d&&DC[d]?"background:"+DC[d]+";border-color:"+DC[d]:"",onclick:()=>go("home",{dept:d})},d))),
+    h("div",{class:"chips"},[["all","Everyone"],["following","Following"]].map(([k,t])=>h("button",{class:V.mode===k?"on":"",onclick:()=>go("home",{mode:k})},t))),
+    ps.length?ps.map(card):h("div",{class:"empty"},V.mode==="following"?"No posts from people you follow yet.":"No posts here yet. Be the first!"));
+}
+
+function profile(){
+  const us=U(),u=us[V.en];if(!u)return h("div",{class:"empty"},"Student not found.");
+  const mine=V.en===me.en,fl=(us[me.en].following||[]).includes(V.en),flw=Object.values(us).filter(x=>(x.following||[]).includes(V.en)).length;
+  const ps=P().filter(p=>p.en===V.en).sort((a,b)=>b.t-a.t);
+  return h("div",{},h("div",{class:"card"},h("div",{class:"ph"},av(u.name,1),h("div",{},h("h2",{style:"margin:0"},u.name),h("div",{class:"sub"},V.en))),
+    h("div",{class:"stats"},h("span",{},h("b",{},ps.length)," posts"),h("span",{},h("b",{},flw)," followers"),h("span",{},h("b",{},(u.following||[]).length)," following")),
+    !mine&&h("div",{style:"display:flex;gap:8px"},h("button",{class:fl?"g":"",onclick:()=>follow(V.en)},fl?"Following":"Follow"),h("button",{class:"g",onclick:()=>go("chat",{chat:V.en})},"Message"))),
+    ps.length?ps.map(card):h("div",{class:"empty"},"No posts yet."));
+}
+
+function chatView(){
+  const us=U(),cs=C(),others=Object.keys(us).filter(e=>e!==me.en&&(!V.q||(us[e].name+e).toLowerCase().includes(V.q.toLowerCase())));
+  const last=e=>{const m=cs[ck(me.en,e)];return m&&m[m.length-1]};
+  others.sort((a,b)=>((last(b)||{}).t||0)-((last(a)||{}).t||0));
+  const q=h("input",{type:"text",placeholder:"Search students…",value:V.q,style:"margin:8px;width:calc(100% - 16px)"});
+  q.oninput=()=>{V.q=q.value;const pos=q.value.length;render();const n=document.querySelector(".chat input");if(n){n.focus();n.setSelectionRange(pos,pos)}};
+  const list=h("div",{class:"ul"},others.length?others.map(e=>{const l=last(e);return h("div",{class:"ur"+(V.chat===e?" on":""),onclick:()=>go("chat",{chat:e})},av(us[e].name),h("div",{},h("b",{},us[e].name),h("div",{class:"sub"},l?l.text:e)))}):h("div",{class:"empty"},"No other students yet."));
+  let right;
+  if(V.chat&&us[V.chat]){
+    const msgs=h("div",{class:"msgs",id:"msgs"},(cs[ck(me.en,V.chat)]||[]).map(m=>h("div",{class:"m"+(m.from===me.en?" me":"")},m.text)));
+    const inp=h("input",{type:"text",placeholder:"Message…",maxlength:"500"});
+    const send=()=>{const t=inp.value.trim();if(!t)return;const c=C(),k=ck(me.en,V.chat);c[k]=c[k]||[];c[k].push({from:me.en,text:t,t:Date.now()});S("cg_chats",c);render();const n=document.querySelector(".cin input");if(n)n.focus()};
+    inp.onkeydown=e=>{if(e.key==="Enter")send()};
+    right=h("div",{},h("div",{class:"ph",style:"padding:10px 12px;margin:0;border-bottom:1px solid var(--bd)"},h("button",{class:"l",onclick:()=>go("chat",{chat:null})},"←"),av(us[V.chat].name),h("button",{class:"nm",onclick:()=>go("profile",{en:V.chat})},us[V.chat].name)),msgs,h("div",{class:"cin"},inp,h("button",{onclick:send},"Send")));
+    setTimeout(()=>{const m=document.getElementById("msgs");if(m)m.scrollTop=m.scrollHeight},0);
+  }else right=h("div",{},h("div",{class:"empty",style:"margin:auto"},"Select a student to start chatting."));
+  return h("div",{class:"chat"+(V.chat?" open":"")},h("div",{},q,list),right);
+}
+
+function render(){
+  const root=document.getElementById("root"),nav=document.getElementById("nav");root.innerHTML="";nav.innerHTML="";
+  if(!me){root.append(auth());return}
+  [["home","Home"],["chat","Chat"],["profile","Profile"]].forEach(([k,t])=>nav.append(h("button",{class:V.v===k&&(k!=="profile"||V.en===me.en)?"on":"",onclick:()=>go(k,k==="profile"?{en:me.en}:{})},t)));
+  nav.append(h("button",{onclick:()=>{me=null;try{sessionStorage.removeItem("cg_me")}catch(e){}V.authMode="login";render()}},"Log out"));
+  root.append(V.v==="chat"?chatView():V.v==="profile"?profile():home());
+}
+function shrink(file){return new Promise((res,rej)=>{const r=new FileReader();r.onerror=rej;r.onload=()=>{const im=new Image();im.onerror=rej;im.onload=()=>{const k=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.7))};im.src=r.result};r.readAsDataURL(file)})}
+window.addEventListener("storage",()=>{const a=document.activeElement;if(me&&!(a&&/INPUT|SELECT/.test(a.tagName)))render()});
+try{const e=sessionStorage.getItem("cg_me");if(e&&U()[e])me={en:e}}catch(e){}
+render();
+</script>
+</body>
+</html>
